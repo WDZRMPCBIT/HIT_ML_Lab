@@ -1,5 +1,6 @@
 import numpy as np
 from data import Dataset
+from classifier.k_means import KMeans
 
 
 class EM(object):
@@ -20,11 +21,14 @@ class EM(object):
         return ret
 
     def train(self, data: Dataset):
+        k_means = KMeans(self.__kind, self.__epoch)
+        k_means.train(data)
+        flag = k_means.predicate(data)
+
         self.__cov = []
         self.__mean = []
         self.__res = [[0.0] * self.__kind] * data.cnt()
 
-        flag = np.random.randint(self.__kind, size=data.cnt())
         for i in range(self.__kind):
             rec = []
             for j in range(data.cnt()):
