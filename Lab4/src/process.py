@@ -10,6 +10,7 @@ class Process(object):
         """
         self.__name = name
         self.__data = deepcopy(data)
+        self.__PCA_flag = False
 
     def PCA(self, dim: int):
         """
@@ -17,32 +18,37 @@ class Process(object):
 
         :param dim: 降低到的维数
         """
-        x = [[]] * self.__data.cnt()
-        for i in range(self.__data.cnt()):
-            x[self.__data.y()[i]].append(self.__data.x()[i])
+        self.__mean = np.mean(self.__data.x(), axis=0)
+        norm = self.__data.x() - self.__mean
 
-        res = []
-        for i in range(self.__data.kind()):
-            res = res + self.__pca_process(x[i], dim)
+        self.__scope = np.max(norm, axis=0) - np.min(norm, axis=0)
+        X = norm / self.__scope
 
-        self.__data = Dataset(np.array(res), self.__data.y())
+        Sigma = (1.0 / self.__data.cnt()) * np.dot(X.T, X)
 
-    def __pca_process(self, x, dim: int):
-        x = np.array(x)
-        cnt, feature = x.shape
+        U, S, V = np.linalg.svd(Sigma)
+        self.__U_reduce = U[:, 0:dim].reshape(self.__data.dim(), dim)
 
-        mean = np.sum(x, axis=0) / cnt
-        x = np.array(x - [np.array.tolist(mean)] * cnt)
-        print(x)
+        self.__data = Dataset(np.dot(X, self.__U_reduce), self.__data.y())
+        self.__PCA_flag = True
 
-        # return np.array.tolist(x)
+    def rePCA(self):
+        """
+        对PCA做还原
+        需要已调用过PCA，否则不做任何处理
+        """
+        if self.__PCA_flag is False:
+            return
+
+        x = self.__data.x() @ self.__U_reduce.T
+        self.__data = Dataset(x * self.__scope + self.__mean, self.__data.y())
+        self.__PCA_flag = False
 
     def show2D(self) -> None:
         """
         图形化显示点集中的各个点及其所属聚类
         只显示前两维
         """
-        flag = self.__classifier.predicate(self.__data)
         color = ['b', 'c', 'g', 'k', 'm', 'r', 'w', 'y']
         if self.__data.dim() < 2:
             print("illegal dim")
@@ -54,7 +60,7 @@ class Process(object):
         for i in range(self.__data.cnt()):
             plt.scatter(self.__data.x()[i][0],
                         self.__data.x()[i][1],
-                        color=color[flag[i]])
+                        color=color[self.__data.y()[i]])
 
         plt.show()
 
@@ -72,7 +78,9 @@ class Process(object):
 
         ax = plt.subplot(111, projection='3d')
         for i in range(self.__data.cnt()):
-            ax.scatter(self.__data.x()[i][0], self.__data.x()[
-                i][1], self.__data.x()[i][2], color=color[self.__data.y()[i]])
+            ax.scatter(self.__data.x()[i][0],
+                       self.__data.x()[i][1],
+                       self.__data.x()[i][2],
+                       color=color[self.__data.y()[i]])
 
         plt.show()

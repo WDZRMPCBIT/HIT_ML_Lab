@@ -16,4 +16,5 @@ if __name__ == "__main__":
 
     module = Process(data, "PCA")
     module.PCA(2)
-    module.show2D()
+    module.rePCA()
+    module.show3D()
