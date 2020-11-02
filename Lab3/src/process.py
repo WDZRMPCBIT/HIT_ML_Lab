@@ -24,13 +24,16 @@ class Process(object):
     def train(self):
         self.__classifier.train(self.__data)
 
-    def show(self) -> None:
+    def show2D(self) -> None:
         """
         图形化显示点集中的各个点及其所属聚类
-        受matplotlib的限制，只能显示两维
+        只显示前两维
         """
         flag = self.__classifier.predicate(self.__data)
         color = ['b', 'c', 'g', 'k', 'm', 'r', 'w', 'y']
+        if self.__data.dim() < 2:
+            print("illegal dim")
+            return
 
         import matplotlib.pyplot as plt
 
@@ -39,5 +42,25 @@ class Process(object):
             plt.scatter(self.__data.x()[i][0],
                         self.__data.x()[i][1],
                         color=color[flag[i]])
+
+        plt.show()
+
+    def show3D(self) -> None:
+        """
+        图形化显示点集中的各个点及其所属聚类
+        只显示前三维
+        """
+        flag = self.__classifier.predicate(self.__data)
+        color = ['b', 'c', 'g', 'k', 'm', 'r', 'w', 'y']
+        if self.__data.dim() < 3:
+            print("illegal dim")
+            return
+
+        import matplotlib.pyplot as plt
+
+        ax = plt.subplot(111, projection='3d')
+        for i in range(self.__data.cnt()):
+            ax.scatter(self.__data.x()[i][0], self.__data.x()[
+                        i][1], self.__data.x()[i][2], color=color[flag[i]])
 
         plt.show()

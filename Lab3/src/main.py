@@ -23,7 +23,7 @@ if __name__ == "__main__":
     if args.method == "EM":
         from classifier.EM import EM
         classifier = EM(args.kinds, args.epoch)
-    module = Process(data, classifier, "kinds = " + str(args.kinds))
+    module = Process(data, classifier, "kinds = " + str(args.kinds) + ", epoch = " + str(args.epoch))
 
     module.train()
-    module.show()
+    module.show2D()

@@ -12,9 +12,9 @@ parser.add_argument('--path',
                     type=str,
                     default="../data/normal_distribution",
                     help="数据路径")
-parser.add_argument('--method', '-m', type=str, default="k_means", help="训练模型")
+parser.add_argument('--method', '-m', type=str, default="EM", help="训练模型")
 parser.add_argument('--kinds', '-k', type=int, default=4, help="聚类数")
-parser.add_argument('--epoch', '-e', type=int, default=100, help="迭代次数")
+parser.add_argument('--epoch', '-e', type=int, default=1, help="迭代次数")
 parser.add_argument('--random_seed',
                     '-rs',
                     type=int,

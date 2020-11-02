@@ -43,4 +43,4 @@ def load_txt(path: str, dim: int):
     x = np.array(x)
     y = np.array(y)
 
-    return x, y
+    return x
