@@ -1,3 +1,4 @@
+import numpy as np
 from copy import deepcopy
 
 
@@ -12,8 +13,8 @@ class Dataset(object):
         """
         assert len(x) == len(y)
 
-        self.__x = deepcopy(x)
-        self.__y = deepcopy(y)
+        self.__x = np.array(x)
+        self.__y = np.array(y)
 
     def x(self):
         return deepcopy(self.__x)

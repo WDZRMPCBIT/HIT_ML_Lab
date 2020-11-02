@@ -1,5 +1,4 @@
 import numpy as np
-import pandas as pd
 
 
 def load_csv(path: str, dim: int):
@@ -10,6 +9,8 @@ def load_csv(path: str, dim: int):
     :param path: csv文件路径
     :param dim: 自变量维数
     """
+    import pandas as pd
+
     data = pd.read_csv(path)
 
     x = []
@@ -21,27 +22,21 @@ def load_csv(path: str, dim: int):
     return x, y
 
 
-def load_txt(path: str, dim: int):
-    """
-    从txt文件中读取训练的数据
-    要求txt中第一列为因变量，后面依次为自变量
+def load_jpg(path: str):
+    import os
+    from PIL import Image
 
-    :param path: txt文件路径
-    :param dim: 自变量维数
-    """
+    cnt = 0
     x = []
-    y = []
-    with open(path, 'r') as f:
-        for line in f:
-            words = line.split()
-            y.append(int(words[0]))
+    dirs = os.listdir(path)
+    for file_name in dirs:
+        if file_name.split('.')[1] != 'py':
+            img = np.asarray(Image.open(path + "/" + file_name))
+            img = img.tolist()
+            tmp = []
+            for line in img:
+                tmp = tmp + line
+            x.append(tmp)
+            cnt += 1
 
-            t = []
-            for i in range(1, dim + 1):
-                t.append(float(words[i]))
-            x.append(t)
-
-    x = np.array(x)
-    y = np.array(y)
-
-    return x
+    return np.array(x), np.array([0] * cnt)

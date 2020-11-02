@@ -84,3 +84,17 @@ class Process(object):
                        color=color[self.__data.y()[i]])
 
         plt.show()
+
+    def save_image(self, path):
+        """
+        将每一个点转为一个图片保存
+
+        :param path: 保存路径
+        """
+        from PIL import Image
+
+        for i in range(self.__data.cnt()):
+            img = np.reshape(self.__data.x()[i], (30, 30))
+            img = img / np.max(img) * 255
+            im = Image.fromarray(img, 'L')
+            im.save(path + "/" + str(i) + ".jpg")
