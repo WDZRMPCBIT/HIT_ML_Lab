@@ -44,6 +44,16 @@ class Process(object):
         self.__data = Dataset(x * self.__scope + self.__mean, self.__data.y())
         self.__PCA_flag = False
 
+    def snr(self, data: Dataset) -> float:
+        """
+        计算两组数据间的信噪比
+
+        :param data: 另一组数据
+        """
+        diff = self.__data.x() - data.x()
+        r = np.sqrt(np.mean(diff ** 2))
+        return 20 * np.log10(255.0 / r)
+
     def show2D(self) -> None:
         """
         图形化显示点集中的各个点及其所属聚类

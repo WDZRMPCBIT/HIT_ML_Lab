@@ -20,4 +20,7 @@ if __name__ == "__main__":
     module.PCA(800)
     module.rePCA()
     # module.show3D()
-    module.save_image(args.path)
+    # module.save_image(args.path)
+
+    if args.file_type == "jpg":
+        print(module.snr(data))
